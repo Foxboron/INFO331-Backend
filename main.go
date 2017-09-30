@@ -13,12 +13,14 @@ func BasicAuth() gin.HandlerFunc {
 		username, password, _ := c.Request.BasicAuth()
 		if db.First(&user, "username = ?", username).RecordNotFound() {
 			c.Header("WWW-Authenticate", "U HAVE TREAD UPON MY DOMAIN & MUST SUFFER. WHO R U?")
-			return c.AbortWithStatus(401)
+			c.AbortWithStatus(401)
+			return
 		}
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 		if err != nil {
 			c.Header("WWW-Authenticate", "U HAVE TREAD UPON MY DOMAIN & MUST SUFFER. WHO R U?")
-			return c.AbortWithStatus(401)
+			c.AbortWithStatus(401)
+			return
 		}
 		c.Set(gin.AuthUserKey, user)
 	}
@@ -39,20 +41,24 @@ func main() {
 				panic(err)
 			}
 			db.Create(&User{Username: username, Password: string(hashedPassword)})
-			return c.Status(200)
+			c.Status(200)
+			return
 		}
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 		if err != nil {
-			return c.Status(400)
+			c.Status(400)
+			return
 		}
-		return c.Status(200)
+		c.Status(200)
+		return
 	})
 
 	r := router.Group("/v1", BasicAuth())
 	r.GET("/users", func(c *gin.Context) {
 		var users []User
 		db.Find(&users)
-		return c.JSON(200, users)
+		c.JSON(200, users)
+		return
 	})
 
 	router.Run(":8080")
