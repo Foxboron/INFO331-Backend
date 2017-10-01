@@ -36,12 +36,7 @@ func main() {
 		password := c.PostForm("password")
 
 		if db.First(&user, "username = ?", username).RecordNotFound() {
-			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-			if err != nil {
-				panic(err)
-			}
-			db.Create(&User{Username: username, Password: string(hashedPassword)})
-			c.Status(200)
+			c.Status(400)
 			return
 		}
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
@@ -50,6 +45,23 @@ func main() {
 			return
 		}
 		c.Status(200)
+		return
+	})
+
+	router.POST("/register", func(c *gin.Context) {
+		var user User
+		username := c.PostForm("username")
+		password := c.PostForm("password")
+		if db.First(&user, "username = ?", username).RecordNotFound() {
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+			if err != nil {
+				panic(err)
+			}
+			db.Create(&User{Username: username, Password: string(hashedPassword)})
+			c.Status(200)
+			return
+		}
+		c.Status(400)
 		return
 	})
 
