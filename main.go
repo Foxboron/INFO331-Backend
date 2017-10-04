@@ -73,5 +73,13 @@ func main() {
 		return
 	})
 
+	r.GET("/user/:username", func(c *gin.Context) {
+		var users []User
+		username := c.Param("username")
+		db.Where("username LIKE ?", "%"+username+"%").Find(&users)
+		c.IndentedJSON(200, users)
+		return
+	})
+
 	router.Run(":8000")
 }
