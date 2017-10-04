@@ -69,7 +69,7 @@ func main() {
 	r.GET("/users", func(c *gin.Context) {
 		var users []User
 		db.Find(&users)
-		c.JSON(200, users)
+		c.IndentedJSON(200, users)
 		return
 	})
 
