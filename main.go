@@ -41,10 +41,10 @@ func main() {
 		}
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 		if err != nil {
-			c.Status(400)
+			c.IndentedJSON(200, user)
 			return
 		}
-		c.Status(200)
+		c.IndentedJSON(200, user)
 		return
 	})
 
