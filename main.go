@@ -26,9 +26,10 @@ func BasicAuth() gin.HandlerFunc {
 	}
 }
 
-func main() {
+var router = gin.Default()
+var r = router.Group("/v1", BasicAuth())
 
-	router := gin.Default()
+func main() {
 
 	router.POST("/login", func(c *gin.Context) {
 		var user User
@@ -41,10 +42,10 @@ func main() {
 		}
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 		if err != nil {
-			c.IndentedJSON(200, user)
+			c.IndentedJSON(200, &user)
 			return
 		}
-		c.IndentedJSON(200, user)
+		c.IndentedJSON(200, &user)
 		return
 	})
 
@@ -57,27 +58,12 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			db.Create(&User{Username: username, Password: string(hashedPassword)})
-			c.Status(200)
+			user := &User{Username: username, Password: string(hashedPassword)}
+			db.Create(&user)
+			c.IndentedJSON(200, &user)
 			return
 		}
 		c.Status(400)
-		return
-	})
-
-	r := router.Group("/v1", BasicAuth())
-	r.GET("/users", func(c *gin.Context) {
-		var users []User
-		db.Find(&users)
-		c.IndentedJSON(200, users)
-		return
-	})
-
-	r.GET("/user/:username", func(c *gin.Context) {
-		var users []User
-		username := c.Param("username")
-		db.Where("username LIKE ?", "%"+username+"%").Find(&users)
-		c.IndentedJSON(200, users)
 		return
 	})
 

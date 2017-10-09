@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -19,18 +18,21 @@ type User struct {
 
 type Group struct {
 	gorm.Model
-	Name   string
-	Owner  User
-	Users  []User
-	Points int
+	Name    string
+	Owner   User     `gorm:"ForeignKey:ID"`
+	Users   []User   `gorm:"ForeignKey:ID"`
+	Becaons []Beacon `gorm:"ForeignKey:ID"`
+	Points  int
 }
 
-type Beacons struct {
+type Beacon struct {
 	gorm.Model
-	BeaconID string
-	Name     string
-	Lat      int
-	Long     int
+	UUID  string
+	Major string
+	Minor string
+	Name  string
+	Lat   int
+	Long  int
 }
 
 type Stats struct {
@@ -52,7 +54,6 @@ func init() {
 
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Group{})
-	db.AutoMigrate(&Beacons{})
+	db.AutoMigrate(&Beacon{})
 	db.AutoMigrate(&Stats{})
-	fmt.Println("Woop")
 }
