@@ -5,7 +5,7 @@ import "github.com/gin-gonic/gin"
 func init() {
 	r.GET("/users", func(c *gin.Context) {
 		var users []User
-		db.Find(&users)
+		db.Preload("Groups").Preload("Groups.Owner").Find(&users)
 		c.IndentedJSON(200, users)
 		return
 	})
@@ -29,7 +29,7 @@ func init() {
 	r.GET("/user/:id", func(c *gin.Context) {
 		var user User
 		id := c.Param("id")
-		db.Find(&user, id)
+		db.Preload("Groups").Find(&user, id)
 		c.IndentedJSON(200, user)
 		return
 	})

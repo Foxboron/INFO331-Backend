@@ -28,6 +28,7 @@ func init() {
 		c.Bind(&group)
 		group.Owner = user
 		db.Create(&group)
+		db.Model(&user).Association("Groups").Append(&group)
 		c.IndentedJSON(200, &group)
 	})
 
@@ -70,8 +71,7 @@ func init() {
 			return
 		}
 		db.Find(&user, userid)
-		db.Model(&group).Association("Users").Append(user)
-		db.Save(&group)
+		db.Model(&user).Association("Groups").Append(&group)
 	})
 
 	r.DELETE("/grup/:id/user/:userid", func(c *gin.Context) {

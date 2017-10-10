@@ -11,7 +11,7 @@ type User struct {
 	gorm.Model
 	Username string
 	Password string
-	Groups   []Group
+	Groups   []Group `gorm:"many2many:user_groups;"`
 	Photo    string
 	Points   int
 }
@@ -19,10 +19,11 @@ type User struct {
 type Group struct {
 	gorm.Model
 	Name    string
-	Owner   User     `gorm:"ForeignKey:ID"`
-	Users   []User   `gorm:"ForeignKey:ID"`
-	Becaons []Beacon `gorm:"ForeignKey:ID"`
-	Points  int
+	Owner   User
+	OwnerID int
+	Users   []User `gorm:"many2many:user_groups;"`
+	// Becaons []Beacon `gorm:"ForeignKey:ID"`
+	Points int
 }
 
 type Beacon struct {
@@ -51,6 +52,7 @@ func init() {
 		panic("failed to connect database")
 	}
 	db = init_db
+	db.Set("gorm:auto_preload", true)
 
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Group{})
