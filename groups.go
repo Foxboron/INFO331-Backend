@@ -74,6 +74,6 @@ func init() {
 		db.Model(&user).Association("Groups").Append(&group)
 	})
 
-	r.DELETE("/grup/:id/user/:userid", func(c *gin.Context) {
+	r.DELETE("/group/:groupid/user/:userid", func(c *gin.Context) {
 	})
 }
