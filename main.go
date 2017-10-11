@@ -41,10 +41,12 @@ func main() {
 			return
 		}
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-		if err != nil {
+	 	if err != nil {
+			db.Preload("Groups")
 			c.IndentedJSON(200, &user)
 			return
 		}
+		db.Preload("Groups").Where("username LIKE?", "%"+username+"%").Find(&user)
 		c.IndentedJSON(200, &user)
 		return
 	})
