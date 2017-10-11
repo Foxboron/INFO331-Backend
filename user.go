@@ -18,12 +18,11 @@ func init() {
 		return
 	})
 
-	r.GET("/search/:username", func(c *gin.Context) {
+	r.GET("/search/users/:username", func(c *gin.Context) {
 		var users []User
 		username := c.Param("username")
-		db.Where("username LIKE ?", "%"+username+"%").Find(&users)
-		c.IndentedJSON(200, users)
-		return
+		db.Preload("Groups").Where("username LIKE ?", "%"+username+"%").Find(&users)
+		c.IndentedJSON(200, &users)
 	})
 
 	r.GET("/user/:id", func(c *gin.Context) {

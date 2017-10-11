@@ -74,6 +74,12 @@ func init() {
 		db.Model(&user).Association("Groups").Append(&group)
 	})
 
-	r.DELETE("/group/:groupid/user/:userid", func(c *gin.Context) {
+	// r.DELETE("/group/:groupid/user/:userid", func(c *gin.Context) {})
+
+	r.GET("/search/groups/:groupname", func(c *gin.Context) {
+		var groups []Group
+		groupname := c.Param("groupname")
+		db.Preload("Owner").Preload("Users").Where("name LIKE ?", "%"+groupname+"%").Find(&groups)
+		c.IndentedJSON(200, &groups)
 	})
 }
