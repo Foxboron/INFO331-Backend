@@ -36,12 +36,12 @@ func main() {
 		username := c.PostForm("username")
 		password := c.PostForm("password")
 
-		if db.Preload("Groups").First(&user, "username = ?", username).RecordNotFound() {
+		if db.Preload("Groups").Preload("Groups.Owner").Preload("Groups.Users").First(&user, "username = ?", username).RecordNotFound() {
 			c.Status(400)
 			return
 		}
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-	 	if err != nil {
+		if err != nil {
 			c.IndentedJSON(200, &user)
 			return
 		}
