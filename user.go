@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+)
 
 func init() {
 	r.GET("/users", func(c *gin.Context) {
@@ -12,6 +15,15 @@ func init() {
 	r.POST("/user", func(c *gin.Context) {
 		var user User
 		c.Bind(&user)
+		if user.Password != "" {
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+			if err != nil {
+				c.IndentedJSON(500, gin.H{"message": "Password error",
+					"status": "failure"})
+				return
+			}
+			user.Password = string(hashedPassword)
+		}
 		db.Create(user)
 		c.IndentedJSON(200, &user)
 	})
@@ -36,6 +48,15 @@ func init() {
 		db.Find(&user, id)
 		var newUser User
 		c.Bind(&newUser)
+		if user.Password != "" {
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+			if err != nil {
+				c.IndentedJSON(500, gin.H{"message": "Password error",
+					"status": "failure"})
+				return
+			}
+			newUser.Password = string(hashedPassword)
+		}
 		db.Model(&user).Updates(&newUser)
 		db.Save(&user)
 		c.IndentedJSON(200, &user)
