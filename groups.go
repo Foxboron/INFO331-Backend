@@ -53,15 +53,17 @@ func init() {
 	r.POST("/group/:groupid/user/:userid", func(c *gin.Context) {
 		authedUser := c.MustGet(gin.AuthUserKey).(User)
 		var group Group
-		var owner User
 		groupid := c.Param("groupid")
 		db.Find(&group, groupid)
-		db.Model(&group).Association("Owner").Find(&owner)
-		if owner.ID != authedUser.ID {
-			c.IndentedJSON(400, gin.H{"message": "The owner has to add members to a group",
-				"status": "failure"})
-			return
-		}
+
+		// Make sure the user is the owner
+		// var owner User
+		// db.Model(&group).Association("Owner").Find(&owner)
+		// if owner.ID != authedUser.ID {
+		// 	c.IndentedJSON(400, gin.H{"message": "The owner has to add members to a group",
+		// 		"status": "failure"})
+		// 	return
+		// }
 
 		var user User
 		userid := c.Param("userid")
