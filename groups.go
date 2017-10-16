@@ -51,12 +51,12 @@ func init() {
 	})
 
 	r.POST("/group/:groupid/user/:userid", func(c *gin.Context) {
-		authedUser := c.MustGet(gin.AuthUserKey).(User)
 		var group Group
 		groupid := c.Param("groupid")
 		db.Find(&group, groupid)
 
 		// Make sure the user is the owner
+		// authedUser := c.MustGet(gin.AuthUserKey).(User)
 		// var owner User
 		// db.Model(&group).Association("Owner").Find(&owner)
 		// if owner.ID != authedUser.ID {
