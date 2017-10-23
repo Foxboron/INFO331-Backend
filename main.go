@@ -66,16 +66,18 @@ func main() {
 		c.Status(400)
 		return
 	})
-	router.GET("/debug/drop", func(c *gin.Content) {
+
+	router.GET("/debug/drop", func(c *gin.Context) {
 		db.DropTableIfExists(&User{})
-		db.DropTableIfExists(&Groups{})
+		db.DropTableIfExists(&Group{})
 		db.DropTableIfExists("user_groups")
-		db.DropTableIfExists(&Bacons{})
+		db.DropTableIfExists(&Beacon{})
 		db.DropTableIfExists(&Stats{})
 		db.AutoMigrate(&User{})
 		db.AutoMigrate(&Group{})
 		db.AutoMigrate(&Beacon{})
 		db.AutoMigrate(&Stats{})
 	})
+
 	router.Run(":8000")
 }
