@@ -66,6 +66,16 @@ func main() {
 		c.Status(400)
 		return
 	})
-
+	router.GET("/debug/drop", func(c *gin.Content) {
+		db.DropTableIfExists(&User{})
+		db.DropTableIfExists(&Groups{})
+		db.DropTableIfExists("user_groups")
+		db.DropTableIfExists(&Bacons{})
+		db.DropTableIfExists(&Stats{})
+		db.AutoMigrate(&User{})
+		db.AutoMigrate(&Group{})
+		db.AutoMigrate(&Beacon{})
+		db.AutoMigrate(&Stats{})
+	})
 	router.Run(":8000")
 }
