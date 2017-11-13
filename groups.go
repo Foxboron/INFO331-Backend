@@ -8,7 +8,7 @@ func init() {
 
 	r.GET("/groups", func(c *gin.Context) {
 		var groups []Group
-		db.Preload("Owner").Preload("Users").Find(&groups)
+		db.Preload("Owner").Preload("Users").Preload("Beacon").Find(&groups)
 		c.IndentedJSON(200, &groups)
 		return
 	})
@@ -18,7 +18,7 @@ func init() {
 		groupid := c.PostForm("id")
 		// Preload is used for fields where we use
 		// another database
-		db.Preload("Owner").Preload("Users").Find(&group, groupid)
+		db.Preload("Owner").Preload("Beacon").Preload("Users").Find(&group, groupid)
 		c.IndentedJSON(200, &group)
 	})
 
@@ -76,12 +76,28 @@ func init() {
 		db.Model(&user).Association("Groups").Append(&group)
 	})
 
+	r.POST("/group/:groupid/beacon/:beaconid", func(c *gin.Context) {
+		var group Group
+		groupid := c.Param("groupid")
+		db.Find(&group, groupid)
+
+		var beacon Beacon
+		beaconid := c.Param("beaconid")
+		if beaconid == "" {
+			c.IndentedJSON(400, gin.H{"message": "Didn't find any beacon object",
+				"status": "failure"})
+			return
+		}
+		db.Find(&beacon, beaconid)
+		db.Model(&group).Association("Beacon").Append(&beacon)
+	})
+
 	// r.DELETE("/group/:groupid/user/:userid", func(c *gin.Context) {})
 
 	r.GET("/search/groups/:groupname", func(c *gin.Context) {
 		var groups []Group
 		groupname := c.Param("groupname")
-		db.Preload("Owner").Preload("Users").Where("name LIKE ?", "%"+groupname+"%").Find(&groups)
+		db.Preload("Owner").Preload("Users").Preload("Beacon").Where("name LIKE ?", "%"+groupname+"%").Find(&groups)
 		c.IndentedJSON(200, &groups)
 	})
 }

@@ -18,10 +18,12 @@ type User struct {
 
 type Group struct {
 	gorm.Model
-	Name    string
-	Owner   User
-	OwnerID int
-	Users   []User `gorm:"many2many:user_groups;"`
+	Name     string
+	Owner    User
+	OwnerID  int
+	Beacon   Beacon
+	BeaconID int
+	Users    []User `gorm:"many2many:user_groups;"`
 	// Becaons []Beacon `gorm:"ForeignKey:ID"`
 	Points int
 }
@@ -32,8 +34,6 @@ type Beacon struct {
 	Major string
 	Minor string
 	Name  string
-	Lat   int
-	Long  int
 }
 
 type Stats struct {
