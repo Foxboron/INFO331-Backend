@@ -4,10 +4,10 @@ import "github.com/gin-gonic/gin"
 
 func init() {
 
-	r.GET("/search/beacons/:uuid", func(c *gin.Context) {
+	r.GET("/search/beacons/:name", func(c *gin.Context) {
 		var beacons []Beacon
-		uuid := c.Param("uuid")
-		db.Where("uuid LIKE ?", "%"+uuid+"%").Find(&beacons)
+		name := c.Param("name")
+		db.Where("name LIKE ?", "%"+name+"%").Find(&beacons)
 		c.IndentedJSON(200, &beacons)
 	})
 
