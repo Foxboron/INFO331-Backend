@@ -72,11 +72,11 @@ func main() {
 		db.DropTableIfExists(&Group{})
 		db.DropTableIfExists("user_groups")
 		db.DropTableIfExists(&Beacon{})
-		db.DropTableIfExists(&Stats{})
+		db.DropTableIfExists(&Event{})
 		db.AutoMigrate(&User{})
 		db.AutoMigrate(&Group{})
 		db.AutoMigrate(&Beacon{})
-		db.AutoMigrate(&Stats{})
+		db.AutoMigrate(&Event{})
 	})
 
 	router.Run(":8000")

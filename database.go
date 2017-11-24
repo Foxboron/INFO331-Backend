@@ -36,12 +36,15 @@ type Beacon struct {
 	Name  string
 }
 
-type Stats struct {
+type Event struct {
 	gorm.Model
-	UserID string
-	Event  string
-	Date   time.Time
-	Value  int
+	User    User
+	UserID  string
+	Group   Group
+	GroupID string
+	Event   string
+	Date    time.Time
+	Value   int
 }
 
 var db *gorm.DB
@@ -57,5 +60,5 @@ func init() {
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Group{})
 	db.AutoMigrate(&Beacon{})
-	db.AutoMigrate(&Stats{})
+	db.AutoMigrate(&Event{})
 }
