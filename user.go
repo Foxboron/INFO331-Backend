@@ -8,7 +8,7 @@ import (
 func init() {
 	r.GET("/users", func(c *gin.Context) {
 		var users []User
-		db.Preload("Groups").Preload("Groups.Owner").Preload("Groups.Users").Find(&users)
+		db.Preload("Groups").Preload("Groups.Owner").Preload("Groups.Users").Preload("Groups.Beacon").Find(&users)
 		c.IndentedJSON(200, users)
 	})
 
@@ -38,7 +38,7 @@ func init() {
 	r.GET("/user/:id", func(c *gin.Context) {
 		var user User
 		id := c.Param("id")
-		db.Preload("Groups").Preload("Groups.Owner").Preload("Groups.Users").Find(&user, id)
+		db.Preload("Groups").Preload("Groups.Owner").Preload("Groups.Users").Preload("Group.Beacon").Find(&user, id)
 		c.IndentedJSON(200, user)
 	})
 
