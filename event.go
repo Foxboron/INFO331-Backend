@@ -18,8 +18,10 @@ func init() {
 		db.Find(&user, userid)
 		var event Event
 		c.Bind(&event)
+		db.Create(&event)
 		db.Model(&event).Association("Group").Append(&group)
 		db.Model(&event).Association("User").Append(&user)
+		db.Save(&event)
 		c.IndentedJSON(200, &event)
 	})
 
