@@ -27,7 +27,7 @@ func init() {
 		var group Group
 		c.Bind(&group)
 		group.Owner = user
-		db.Create(&group)
+		db.Set("gorm:save_associations", false).Create(&group)
 		db.Model(&user).Association("Groups").Append(&group)
 		c.IndentedJSON(200, &group)
 	})

@@ -24,8 +24,7 @@ type Group struct {
 	Beacon   Beacon
 	BeaconID int
 	Users    []User `gorm:"many2many:user_groups;"`
-	// Becaons []Beacon `gorm:"ForeignKey:ID"`
-	Points int
+	Points   int
 }
 
 type Beacon struct {
