@@ -28,7 +28,7 @@ func init() {
 	r.GET("/events/:userid", func(c *gin.Context) {
 		var events []Event
 		id := c.Param("userid")
-		db.Preload("User").Preload("Group").Find(&events, id)
+		db.Preload("User").Preload("Group").Where("userid = ?", id).Find(&events)
 		c.IndentedJSON(200, &events)
 	})
 
