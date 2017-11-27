@@ -18,7 +18,7 @@ func init() {
 		db.Find(&user, userid)
 		var event Event
 		c.Bind(&event)
-		db.Create(&event)
+		db.Set("gorm:save_associations", false).Create(&event)
 		db.Model(&event).Association("Group").Append(&group)
 		db.Model(&event).Association("User").Append(&user)
 		db.Save(&event)
