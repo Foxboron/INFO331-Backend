@@ -30,7 +30,6 @@ func init() {
 		var user User
 		id := c.Param("userid")
 		db.Find(&user, id)
-		db.Model(&user).Related(&profile)
 		db.Preload("User").Preload("Group").Model(&events).Related(&user)
 		c.IndentedJSON(200, &events)
 	})
