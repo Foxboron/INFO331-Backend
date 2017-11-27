@@ -18,6 +18,7 @@ func init() {
 		db.Find(&user, userid)
 		var event Event
 		c.Bind(&event)
+		l
 		db.Set("gorm:save_associations", false).Create(&event)
 		db.Model(&event).Association("Group").Append(&group)
 		db.Model(&event).Association("User").Append(&user)
@@ -27,10 +28,8 @@ func init() {
 
 	r.GET("/events/:userid", func(c *gin.Context) {
 		var events []Event
-		var user User
 		id := c.Param("userid")
-		db.Find(&user, id)
-		db.Preload("User").Preload("Group").Model(&events).Related(&user)
+		db.Preload("User").Preload("Group").Where("user_id = ?", id).Find(&events)
 		c.IndentedJSON(200, &events)
 	})
 
