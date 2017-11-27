@@ -36,7 +36,7 @@ func main() {
 		username := c.PostForm("username")
 		password := c.PostForm("password")
 
-		if db.Preload("Groups").Preload("Groups.Owner").Preload("Groups.Users").First(&user, "username = ?", username).RecordNotFound() {
+		if db.Preload("Groups").Preload("Groups.Owner").Preload("Groups.Users").Preload("Groups.Beacon").First(&user, "username = ?", username).RecordNotFound() {
 			c.Status(400)
 			return
 		}
