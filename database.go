@@ -24,7 +24,8 @@ type Group struct {
 	Beacon   Beacon
 	BeaconID int
 	Users    []User `gorm:"many2many:user_groups;"`
-	Points   int
+	// Becaons []Beacon `gorm:"ForeignKey:ID"`
+	Points int
 }
 
 type Beacon struct {
@@ -38,9 +39,9 @@ type Beacon struct {
 type Event struct {
 	gorm.Model
 	User    User
-	UserID  string
+	UserID  int
 	Group   Group
-	GroupID string
+	GroupID int
 	Event   string
 	Date    time.Time
 	Value   int
