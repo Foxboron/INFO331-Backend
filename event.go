@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"time"
+	"github.com/gin-gonic/gin"
+)
 
 func init() {
 
@@ -18,7 +21,7 @@ func init() {
 		db.Find(&user, userid)
 		var event Event
 		c.Bind(&event)
-		l
+		event.Date = time.Now()
 		db.Set("gorm:save_associations", false).Create(&event)
 		db.Model(&event).Association("Group").Append(&group)
 		db.Model(&event).Association("User").Append(&user)
