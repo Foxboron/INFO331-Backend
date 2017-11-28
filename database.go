@@ -47,6 +47,10 @@ type Event struct {
 	Value   int
 }
 
+type Score struct {
+	Score int
+}
+
 var db *gorm.DB
 
 func init() {
