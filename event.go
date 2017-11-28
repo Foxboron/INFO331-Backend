@@ -37,7 +37,7 @@ func init() {
 		c.IndentedJSON(200, &events)
 	})
 
-	r.GET("/stats/:userid", func(c *gin.Context) {
+	r.GET("/stats/user/:userid", func(c *gin.Context) {
 		var events []Event
 		id := c.Param("userid")
 		db.Preload("User").Preload("Group").Where("user_id = ?", id).Find(&events)
@@ -54,7 +54,7 @@ func init() {
 		c.IndentedJSON(200, &scoreRet)
 	})
 
-	r.GET("/stats/:userid/group/:groupid", func(c *gin.Context) {
+	r.GET("/stats/user/:userid/group/:groupid", func(c *gin.Context) {
 		var events []Event
 		userid := c.Param("userid")
 		groupid := c.Param("groupid")
@@ -71,4 +71,22 @@ func init() {
 		scoreRet.Score = final_score
 		c.IndentedJSON(200, &scoreRet)
 	})
+
+	r.GET("/stats/group/:groupid", func(c *gin.Context) {
+		var events []Event
+		groupid := c.Param("groupid")
+		db.Preload("User").Preload("Group").Where("group_id = ?", groupid).Find(&events)
+		var score = 0.0
+		for k := 0; k < len(events); k += 2 {
+			enter := events[k]
+			exit := events[k+1]
+			b := exit.Date.Sub(enter.Date)
+			score += b.Minutes()
+		}
+		final_score := int(score + 0.5)
+		var scoreRet Score
+		scoreRet.Score = final_score
+		c.IndentedJSON(200, &scoreRet)
+	})
+
 }
