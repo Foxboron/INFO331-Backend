@@ -42,7 +42,7 @@ func init() {
 		id := c.Param("userid")
 		db.Preload("User").Preload("Group").Where("user_id = ?", id).Find(&events)
 		var score = 0.0
-		for k := 0; k < len(events); k += 2 {
+		for k := 0; k+1 < len(events); k += 2 {
 			enter := events[k]
 			exit := events[k+1]
 			b := exit.Date.Sub(enter.Date)
@@ -60,7 +60,7 @@ func init() {
 		groupid := c.Param("groupid")
 		db.Preload("User").Preload("Group").Where("user_id = ? and group_id = ?", userid, groupid).Find(&events)
 		var score = 0.0
-		for k := 0; k < len(events); k += 2 {
+		for k := 0; k+1 < len(events); k += 2 {
 			enter := events[k]
 			exit := events[k+1]
 			b := exit.Date.Sub(enter.Date)
@@ -77,7 +77,7 @@ func init() {
 		groupid := c.Param("groupid")
 		db.Preload("User").Preload("Group").Where("group_id = ?", groupid).Find(&events)
 		var score = 0.0
-		for k := 0; k < len(events); k += 2 {
+		for k := 0; k+1 < len(events); k += 2 {
 			enter := events[k]
 			exit := events[k+1]
 			b := exit.Date.Sub(enter.Date)
