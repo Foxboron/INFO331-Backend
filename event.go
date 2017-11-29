@@ -74,14 +74,18 @@ func init() {
 
 	r.GET("/stats/group/:groupid", func(c *gin.Context) {
 		var events []Event
+		var group Group
 		groupid := c.Param("groupid")
-		db.Preload("User").Preload("Group").Where("group_id = ?", groupid).Find(&events)
+		db.Preload("Users").Find(&group, groupid)
 		var score = 0.0
-		for k := 0; k+1 < len(events); k += 2 {
-			enter := events[k]
-			exit := events[k+1]
-			b := exit.Date.Sub(enter.Date)
-			score += b.Minutes()
+		for _, user := range group.Users {
+			db.Preload("User").Preload("Group").Where("user_id = ? and group_id = ?", user.ID, groupid).Find(&events)
+			for k := 0; k+1 < len(events); k += 2 {
+				enter := events[k]
+				exit := events[k+1]
+				b := exit.Date.Sub(enter.Date)
+				score += b.Minutes()
+			}
 		}
 		final_score := int(score + 0.5)
 		var scoreRet Score
