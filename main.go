@@ -43,7 +43,7 @@ func main() {
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 		if err != nil {
 			c.IndentedJSON(200, &user)
-			return
+			c.Header("WWW-Authenticate", "U HAVE TREAD UPON MY DOMAIN & MUST SUFFER. WHO R U?")
 		}
 		c.IndentedJSON(200, &user)
 		return
