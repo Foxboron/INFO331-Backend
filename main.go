@@ -44,6 +44,7 @@ func main() {
 		if err != nil {
 			c.Header("WWW-Authenticate", "U HAVE TREAD UPON MY DOMAIN & MUST SUFFER. WHO R U?")
 			c.AbortWithStatus(401)
+			return
 		}
 		c.IndentedJSON(200, &user)
 		return
